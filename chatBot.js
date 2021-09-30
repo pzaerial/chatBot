@@ -48,15 +48,15 @@ function onMessageHandler (channel, context, msg, self) {
     if (commandName === '!commands') {
         console.log("User " + context.username + " requested command !commands.");
         commands(channel, context);
-    } else if (commandName === '!dws') {
+    } else if (commandName.toLowerCase() === '!dws') {
         console.log("User " + context.username + " requested command !dws.");
-        dws(channel, context);
-    } else if (commandName === '!iws') {
+        webServicesVoting(channel, context, "dws");
+    } else if (commandName.toLowerCase() === '!iws') {
         console.log("User " + context.username + " requested command !iws.");
-        iws(channel, context);
-    } else if (commandName === '!pws') {
+        webServicesVoting(channel, context, "iws");
+    } else if (commandName.toLowerCase() === '!pws') {
         console.log("User " + context.username + " requested command !pws.");
-        pws(channel, context);
+        webServicesVoting(channel, context, "pws");
     } else if (commandName === '!test') {
         console.log("User " + context.username + " requested command !http.");
         http(channel, context);
@@ -72,37 +72,29 @@ function onMessageHandler (channel, context, msg, self) {
     }
 }
 
+/**
+  * List all available commands.
+  */
 function commands (channel, context) {
-    client.say(channel, "@" + context.username + ": !test ");
+    client.say(channel, "@" + context.username + ": !commands !pws !dws !iws");
 }
 
-function dws (channel, context) {
-    if (data['voting']['dws'] == null) {
-        data['voting']['dws'] = 1;
+/**
+  * Vote on which web services platform is your favorite, PWS, DWS, or IWS.
+  */
+function webServicesVoting (channel, context, choice) {
+    var choiceUpper = choice.toUpperCase();
+    if (data['voting'][choice] == null) {
+        data['voting'][choice] = 1;
     } else {
-        data['voting']['dws'] = data['voting']['dws'] + 1;
+        data['voting'][choice] = data['voting'][choice] + 1;
     }
-    client.say(channel, "@" + context.username + ": Thank you for voting for DWS! The current standings are PWS: " + data['voting']['pws'] + ", DWS: " + data['voting']['dws'] + ", IWS: " + data['voting']['iws'] + ".");
+    client.say(channel, "@" + context.username + ": Thank you for voting for " + choiceUpper + "! The current standings are PWS: " + data['voting']['pws'] + ", DWS: " + data['voting']['dws'] + ", IWS: " + data['voting']['iws'] + ".");
 }
 
-function iws (channel, context) {
-    if (data['voting']['iws'] == null) {
-        data['voting']['iws'] = 1;
-    } else {
-        data['voting']['iws'] = data['voting']['iws'] + 1;
-    }
-    client.say(channel, "@" + context.username + ": Thank you for voting for IWS! The current standings are PWS: " + data['voting']['pws'] + ", DWS: " + data['voting']['dws'] + ", IWS: " + data['voting']['iws'] + ".");
-}
-
-function pws (channel, context) {
-    if (data['voting']['pws'] == null) {
-        data['voting']['pws'] = 1;
-    } else {
-        data['voting']['pws'] = data['voting']['pws'] + 1;
-    }
-    client.say(channel, "@" + context.username + ": Thank you for voting for PWS! The current standings are PWS: " + data['voting']['pws'] + ", DWS: " + data['voting']['dws'] + ", IWS: " + data['voting']['iws'] + ".");
-}
-
+/**
+  * Test functions.
+  */
 function http (channel, context) {
     request('https://node.whitney.rip', {json: true}, (error, response, body) => {
         username = context.username
@@ -118,6 +110,9 @@ function http (channel, context) {
     });
 }
 
+/**
+  * Private helper methods.
+  */
 function syncData () {
     try {
         let jsonString = JSON.stringify(data);
