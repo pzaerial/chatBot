@@ -6,4 +6,4 @@ services:
     restart: always
     build: .
     ports:
-      - "7080:7080"
+      - "7081:7081"

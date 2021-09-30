@@ -18,8 +18,8 @@ COPY config.json ./
 # Install deps
 RUN npm install
 
-# Expose on port 7080
-EXPOSE 7080
+# Expose on port 7081
+EXPOSE 7081
 
 # Run Server
 CMD [ "node", "chatBot.js" ]
