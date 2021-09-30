@@ -1,8 +1,8 @@
 version: "3"
 services:
   chatbot:
-    image: tobeeandmaymay/chatbot
-    container_name: chatbot_whitney
+    image: pzaerial/chatbot
+    container_name: chatbot_pzaerial_whitney
     restart: always
     build: .
     ports:
