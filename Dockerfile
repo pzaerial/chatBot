@@ -12,8 +12,9 @@ COPY package*.json ./
 # Copy source
 COPY chatBot.js ./
 
-# Copy credentials
+# Copy data
 COPY config.json ./
+COPY data.json ./
 
 # Install deps
 RUN npm install

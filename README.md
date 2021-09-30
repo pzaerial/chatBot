@@ -14,6 +14,11 @@ Expects a "config.json" file containing credentials for the bot user. Example Co
   "channel": "targetChannel"
 }
 ```
+
+Also expects a "data.json" file (can be empty as shown or populated with data.)
+```
+{}
+```
 Twitch suggests getting the oauth token by logging into the chatBot's twitch account and visiting https://twitchapps.com/tmi/.
 
 ### Usage
