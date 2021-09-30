@@ -22,6 +22,6 @@ Run locally from source with `node chatBot.js`.
 
 Build & run a docker container: 
 
-`docker build --tag="tobeeandmaymay/chatbot" .`
+`docker build --tag="pzaerial/chatbot" .`
 
 `docker-compose up -d`
