@@ -65,7 +65,7 @@ function onMessageHandler (channel, context, msg, self) {
     }
 
     var curTime = new Date();
-    if(Math.abs(curTime.getTime() - lastSync.getTime()) > 10000){
+    if(Math.abs(curTime.getTime() - lastSync.getTime()) > 3600000){
         console.log("Syncing chatbot data... Time since last sync: " + Math.abs(curTime.getTime() - lastSync.getTime()))
         syncData();
         lastSync = curTime;
