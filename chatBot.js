@@ -43,6 +43,7 @@ function onMessageHandler (channel, context, msg, self) {
 
     //Remove whitespace from chat message
     const commandName = msg.trim();
+    const commandArray = commandName.split(" ");
 
     //(if/else) Chain of command
     if (commandName === '!commands') {
@@ -57,6 +58,15 @@ function onMessageHandler (channel, context, msg, self) {
     } else if (commandName.toLowerCase() === '!pws') {
         console.log("User " + context.username + " requested command !pws.");
         webServicesVoting(channel, context, "pws");
+    } else if (commandArray[0].toString() === '!addpoints') {
+        console.log("User " + context.username + " requested command !addpoints.");
+        addPoints(channel, context, commandArray);
+    } else if (commandArray[0].toString() === '!points') {
+        console.log("User " + context.username + " requested command !points.");
+        getPoints(channel, context, commandArray);
+    } else if (commandArray[0].toString() === '!setpoints') {
+        console.log("User " + context.username + " requested command !setpoints.");
+        setPoints(channel, context, commandArray);
     } else if (commandName === '!test') {
         console.log("User " + context.username + " requested command !http.");
         http(channel, context);
@@ -93,6 +103,75 @@ function webServicesVoting (channel, context, choice) {
 }
 
 /**
+  * PWS/DWS/IWS channel-agnostic points!
+  */
+function setPoints(channel, context, commandArray) {
+    if(!(context["user-type"] === "mod") && !(context.username === channel.replace("#", ""))){
+        console.log("User " + context.username + " requested command !setpoints but was not a moderator.");
+        return;
+    }
+    if(commandArray == null || commandArray.length != 3){
+        client.say(channel, "@" + context.username + ", Usage: !setpoints [username] [amount]");
+        return;
+    }
+    var user = commandArray[1].toString();
+    var amount = parseInt(commandArray[2]);
+    if (!(typeof amount === 'number' && isFinite(amount))) {
+        client.say(channel, "@" + context.username + ": You can only set integer amounts of points.");
+        return;
+    }
+
+    setUserPoints(user, amount);
+    client.say(channel, "Set @" + user + " points to " + data['points'][user] + ".");
+}
+
+function addPoints(channel, context, commandArray) {
+    if(!(context["user-type"] === "mod") && !(context.username === channel.replace("#", ""))){
+        console.log("User " + context.username + " requested command !addPoints but was not a moderator.");
+        return;
+    }
+    if(commandArray == null || commandArray.length != 3){
+        client.say(channel, "@" + context.username + ", Usage: !addPoints [username] [amount]");
+        return;
+    }
+    var user = commandArray[1].toString();
+    var amount = parseInt(commandArray[2]);
+    if (!(typeof amount === 'number' && isFinite(amount))) {
+        client.say(channel, "@" + context.username + ": You can only add integer amounts of points.");
+        return;
+    }
+
+    if (data['points'][user] == null) {
+        setUserPoints(user, amount);
+        client.say(channel, "Set @" + user + " points to " + amount + ".");
+    } else {
+        setUserPoints(user, data['points'][user] + amount);
+        client.say(channel, "Set @" + user + " points to " + data['points'][user] + ".");
+    }
+}
+
+function getPoints(channel, context, commandArray) {
+    if(!(context["user-type"] === "mod") && !(context.username === channel.replace("#", ""))){
+        console.log("User " + context.username + " requested command !points but was not a moderator.");
+        return;
+    }
+    if(commandArray == null || commandArray.length > 2){
+        client.say(channel, "@" + context.username + ", Usage: !points [username]");
+        return;
+    }
+    if(commandArray.length == 1){
+        client.say(channel, "@" + context.username + " has " + data['points'][user] + " points.");
+    } else {
+        var user = commandArray[1].toString();
+        client.say(channel, "@" + user + " has " + data['points'][user] + " points.");
+    }
+}
+
+function setUserPoints(user, amount) {
+    data['points'][user] = amount;
+}
+
+/**
   * Test functions.
   */
 function http (channel, context) {
@@ -126,6 +205,9 @@ function syncData () {
 function formatData () {
     if(data['voting'] == null) {
         data['voting'] = {};
+    }
+    if(data['points'] == null) {
+        data['points'] = {};
     }
 }
 
