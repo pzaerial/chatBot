@@ -11,7 +11,12 @@ Expects a "config.json" file containing credentials for the bot user. Example Co
 {
   "username": "chatBotTwitchUsername",
   "oauth": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "channel": "targetChannel"
+  "channel":
+    [
+      channel,
+      channel,
+      ...
+    ]
 }
 ```
 

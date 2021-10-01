@@ -21,9 +21,7 @@ const opts = {
         username: config.username,
         password: config.oauth
     },
-    channels: [
-        config.channel
-    ]
+    channels: config.channel
 };
 
 //Connect to Twitch & setup handlers
